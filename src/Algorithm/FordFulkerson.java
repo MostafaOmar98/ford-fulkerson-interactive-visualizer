@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class FordFulkerson
 {
-    private ArrayList<DirectedEdge> edgeList, residualGraph; // residual graph is the final graph after max flow is reached
+    private ArrayList<DirectedEdge> edgeList; // residual graph is the final graph after max flow is reached
     private ArrayList<FlowStep> steps; // residual graph in steps
     private Integer flow; // maximum flow
     Vertex src, snk; // start node and goal node
@@ -19,7 +19,6 @@ public class FordFulkerson
         this.edgeList = new ArrayList<DirectedEdge>();
         for (DirectedEdge e : edgeList) // deep copy
             this.edgeList.add(new DirectedEdge(new Vertex(e.getU().getIndex()), new Vertex(e.getV().getIndex()), e.getCap()));
-        residualGraph = null;
         steps = null;
         this.src = src;
         this.snk = snk;
@@ -30,11 +29,6 @@ public class FordFulkerson
     public ArrayList<DirectedEdge> getEdgeList()
     {
         return edgeList;
-    }
-
-    public ArrayList<DirectedEdge> getResidualGraph()
-    {
-        return residualGraph;
     }
 
     public ArrayList<FlowStep> getSteps()
@@ -113,7 +107,6 @@ public class FordFulkerson
     public void run() // runs ford fulkerson on given graph
     {
         // initially the graph is as the input and all edges are not highlighted
-        residualGraph = edgeList;
         steps = new ArrayList<>();
         steps.add(new FlowStep(edgeList, 0));
         flow = 0;
