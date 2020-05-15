@@ -90,7 +90,7 @@ public class GraphDrawer
                     G.removeEdge(oldEdgesList.get(i));
 
                 for (DirectedEdge edge : f.getEdgeList())
-                    G.addEdge(edge, edge.getU(), edge.getV(), EdgeType.DIRECTED);
+                    addEdge(edge);
                 frame.repaint();
             }
         });
