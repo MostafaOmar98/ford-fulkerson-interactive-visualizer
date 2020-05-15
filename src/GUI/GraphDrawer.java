@@ -16,11 +16,11 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
-public class OriginalGraphDrawer
+public class GraphDrawer
 {
     AbstractGraph G;
-
-    public OriginalGraphDrawer(int nV, ArrayList<DirectedEdge> edgeList, Vertex src, Vertex snk)
+    JFrame frame;
+    public GraphDrawer(int nV, ArrayList<DirectedEdge> edgeList, Vertex src, Vertex snk)
     {
         G = new SparseMultigraph<Vertex, DirectedEdge>();
         for (int i = 0; i < nV; ++i)
@@ -49,20 +49,20 @@ public class OriginalGraphDrawer
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
         Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-        Dimension quarterScreen = new Dimension((int) rect.getMaxX() / 2, (int) rect.getMaxY() / 2);
 
         // graph layout on screen
         Layout<Vertex, DirectedEdge> layout = new CircleLayout(G);
-        layout.setSize(quarterScreen);
         // responsible for drawing the graph on screen
         BasicVisualizationServer<Vertex, DirectedEdge> vs = new BasicVisualizationServer<Vertex, DirectedEdge>(layout);
-        vs.setPreferredSize(quarterScreen);
+//        vs.setPreferredSize(quarterScreen);
         setDrawingStyle(vs);
 
         // put graph in a frame
-        JFrame frame = new JFrame("Original Graph");
+        frame = new JFrame("Original Graph");
         frame.add(vs);
         frame.pack();
+        frame.setExtendedState( frame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+
         frame.setVisible(true);
     }
 

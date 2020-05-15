@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Vertex
 {
     private Integer index;
+    private Boolean isSrc = false, isSnk = false;
 
     public Vertex(Integer index)
     {
@@ -42,5 +43,25 @@ public class Vertex
     public String toString()
     {
         return "V" + index;
+    }
+
+    public Boolean isSource()
+    {
+        return isSrc;
+    }
+
+    public void setSource(Boolean src)
+    {
+        isSrc = src;
+    }
+
+    public Boolean isSink()
+    {
+        return isSnk;
+    }
+
+    public void setSink(Boolean snk)
+    {
+        isSnk = snk;
     }
 }
