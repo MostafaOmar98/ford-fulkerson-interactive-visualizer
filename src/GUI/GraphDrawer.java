@@ -24,9 +24,9 @@ public class GraphDrawer
 {
     private AbstractGraph G;
     private JFrame frame;
-    private JLabel flowValue;
-    ArrayList<FlowStep> flowSteps;
-    Integer clickCount = 1;
+    private JLabel flowValue, flowLabel;
+    ArrayList<FlowStep> flowSteps; // contains all iterations of ford fulkerson algorithm on given graph
+    Integer clickCount = 1; // used for calculating which step we are at
     public GraphDrawer(int nV, ArrayList<DirectedEdge> edgeList, Vertex src, Vertex snk)
     {
         G = new SparseMultigraph<Vertex, DirectedEdge>();
@@ -50,20 +50,19 @@ public class GraphDrawer
 
     void addEdge(DirectedEdge e)
     {
-        // multiple edges with same u, v and capacity?
         G.addEdge(e, e.getU(), e.getV(), EdgeType.DIRECTED);
     }
 
 
     private void setInteractiveSolver()
     {
-        JButton step = new JButton("Do One Step");
+        JButton step = new JButton("Run One Step");
         JPanel infoPanel = new JPanel();
 
-        JLabel flowLabel = new JLabel("Flow So Far: ");
+        flowLabel = new JLabel("Flow So Far: ");
         flowValue = new JLabel("0");
-//        flowLabel.setSize(40, 40);
-//        flowValue.setSize(40, 40);
+        flowLabel.setFont(new Font(flowLabel.getFont().getName(), Font.PLAIN, 40));
+        flowValue.setFont(new Font(flowLabel.getFont().getName(), Font.PLAIN, 40));
         infoPanel.add(step);
         infoPanel.add(flowLabel);
         infoPanel.add(flowValue);
@@ -80,6 +79,8 @@ public class GraphDrawer
                 if (clickCount >= flowSteps.size())
                     return;
                 FlowStep f = flowSteps.get(clickCount++);
+                if (clickCount == flowSteps.size())
+                    flowLabel.setText("Maximum Flow: ");
                 Integer newFlowValue = Integer.valueOf(flowValue.getText()) + f.getFlow();
                 flowValue.setText(newFlowValue.toString());
 
