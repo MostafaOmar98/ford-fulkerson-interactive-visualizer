@@ -43,18 +43,13 @@ public class GraphDrawer
         G.addEdge(e, e.getU(), e.getV(), EdgeType.DIRECTED);
     }
 
+
     public void draw()
     {
-        // For getting dimensions of the window
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
-        Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-
         // graph layout on screen
         Layout<Vertex, DirectedEdge> layout = new CircleLayout(G);
         // responsible for drawing the graph on screen
         BasicVisualizationServer<Vertex, DirectedEdge> vs = new BasicVisualizationServer<Vertex, DirectedEdge>(layout);
-//        vs.setPreferredSize(quarterScreen);
         setDrawingStyle(vs);
 
         // put graph in a frame
