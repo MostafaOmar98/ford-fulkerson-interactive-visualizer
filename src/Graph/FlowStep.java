@@ -4,41 +4,32 @@ import java.util.ArrayList;
 
 public class FlowStep
 {
-    ArrayList<DirectedEdge> highlighted, unhighlighted;
+    ArrayList<DirectedEdge> edgeList;
     Integer flow;
 
     public FlowStep(Integer flow)
     {
         this.flow = flow;
-        highlighted = new ArrayList<DirectedEdge>();
-        unhighlighted = new ArrayList<DirectedEdge>();
+        edgeList = new ArrayList<DirectedEdge>();
     }
 
-    public FlowStep(ArrayList<DirectedEdge> highlighted, ArrayList<DirectedEdge> unhighlighted, Integer flow)
+    public FlowStep(ArrayList<DirectedEdge> edgeList, Integer flow)
     {
-        this.highlighted = highlighted;
-        this.unhighlighted = unhighlighted;
+        this.edgeList = new ArrayList<DirectedEdge>();
+        setEdgeList(edgeList);
         this.flow = flow;
     }
 
-    public ArrayList<DirectedEdge> getHighlighted()
+    public ArrayList<DirectedEdge> getEdgeList()
     {
-        return highlighted;
+        return edgeList;
     }
 
-    public void setHighlighted(ArrayList<DirectedEdge> highlighted)
+    public void setEdgeList(ArrayList<DirectedEdge> edgeList)
     {
-        this.highlighted = highlighted;
-    }
-
-    public ArrayList<DirectedEdge> getUnhighlighted()
-    {
-        return unhighlighted;
-    }
-
-    public void setUnhighlighted(ArrayList<DirectedEdge> unhighlighted)
-    {
-        this.unhighlighted = unhighlighted;
+        this.edgeList.clear();
+        for (DirectedEdge e : edgeList) // deep copy
+            this.edgeList.add(new DirectedEdge(new Vertex(e.getU().getIndex()), new Vertex(e.getV().getIndex()), e.getCap(), e.isHighlighted()));
     }
 
     public Integer getFlow()
@@ -49,22 +40,5 @@ public class FlowStep
     public void setFlow(Integer flow)
     {
         this.flow = flow;
-    }
-
-    public void addModifiedEdge(DirectedEdge e)
-    {
-        highlighted.add(e);
-    }
-
-    public void addUnmodifiedEdge(DirectedEdge e)
-    {
-        unhighlighted.add(e);
-    }
-
-    public ArrayList<DirectedEdge> getResidualGraph()
-    {
-        ArrayList<DirectedEdge> edgeList = highlighted;
-        highlighted.addAll(unhighlighted);
-        return edgeList;
     }
 }

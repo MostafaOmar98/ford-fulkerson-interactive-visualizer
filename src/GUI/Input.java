@@ -196,6 +196,22 @@ public class Input extends JPanel
 
         if (error == 0)
         {
+            ArrayList<DirectedEdge> toAddEdges = new ArrayList<>();
+            for (DirectedEdge e : edgesArr)
+            {
+                boolean ok = false;
+                for (DirectedEdge r : edgesArr)
+                {
+                    if (e.isReverse(r))
+                    {
+                        ok = true;
+                        break;
+                    }
+                }
+                if (!ok)
+                    toAddEdges.add(new DirectedEdge(new Vertex(e.getV().getIndex()), new Vertex(e.getU().getIndex()), 0));
+            }
+            edgesArr.addAll(toAddEdges);
             MaxFlowVisualizer visualizer = new MaxFlowVisualizer(nV, edgesArr, new Vertex(srcId), new Vertex(snkId));
             visualizer.run();
         }

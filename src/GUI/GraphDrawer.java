@@ -89,12 +89,8 @@ public class GraphDrawer
                 for (int i = 0; i < oldEdgesList.size(); ++i)
                     G.removeEdge(oldEdgesList.get(i));
 
-                for (DirectedEdge highlightedEdge : f.getHighlighted())
-                    G.addEdge(highlightedEdge, highlightedEdge.getU(), highlightedEdge.getV(), EdgeType.DIRECTED);
-
-                for (DirectedEdge unhighlightedEdge : f.getUnhighlighted())
-                    G.addEdge(unhighlightedEdge, unhighlightedEdge.getU(), unhighlightedEdge.getV(), EdgeType.DIRECTED);
-
+                for (DirectedEdge edge : f.getEdgeList())
+                    G.addEdge(edge, edge.getU(), edge.getV(), EdgeType.DIRECTED);
                 frame.repaint();
             }
         });

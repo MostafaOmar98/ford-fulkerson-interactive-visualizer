@@ -72,33 +72,6 @@ public class FordFulkerson
         this.snk = snk;
     }
 
-    // Update outgoing edges from node u after a path with positive flow is found that passes by modifiedEdge (modifiedEdge is going out from u)
-    private void updateFlowStep(Vertex u, FlowStep f, DirectedEdge modifiedEdge)
-    {
-        boolean addedReverseEdge = false; // checker for not adding reversed edge twice
-        for (DirectedEdge e : edgeList)
-        {
-            if (u.equals(e.getU()) && modifiedEdge != null)
-            {
-                if (e.equals(modifiedEdge)) // update capacity on flow edge
-                {
-                    DirectedEdge UV = new DirectedEdge(e.getU(), e.getV(), e.getCap() - f.getFlow(), true);
-                    f.addModifiedEdge(UV);
-                }
-                else if (e.getU().equals(modifiedEdge.getV()) && e.getV().equals(modifiedEdge.getU()))// update capacity on reverse edge
-                {
-                    addedReverseEdge = true;
-                    DirectedEdge VU = new DirectedEdge(e.getU(), e.getV(), e.getCap() + f.getFlow(), true);
-                    f.addModifiedEdge(VU);
-                }
-            }
-        }
-        if (!addedReverseEdge && modifiedEdge != null) // if the reverse edge wasn't initially in the list
-        {
-            DirectedEdge VU = new DirectedEdge(modifiedEdge.getV(), modifiedEdge.getU(), f.getFlow(), true);
-            f.addUnmodifiedEdge(VU);
-        }
-    }
 
     private FlowStep getFlowStep(Vertex u, Integer runningFlow)
     {
@@ -107,7 +80,6 @@ public class FordFulkerson
         if (u.equals(snk)) // reached snk with a positive flow
         {
             FlowStep f = new FlowStep(runningFlow);
-            updateFlowStep(u, f, null);
             return f;
         }
 
@@ -120,8 +92,17 @@ public class FordFulkerson
                 FlowStep f = getFlowStep(e.getV(), Math.min(runningFlow, e.getCap()));
                 if (f != null) // found a path with a positive flow
                 {
-                    updateFlowStep(u, f, e);
+                    e.setHighlighted(true);
                     e.setCap(e.getCap() - f.getFlow());
+                    for (DirectedEdge r : edgeList)
+                    {
+                        if (e.isReverse(r))
+                        {
+                            r.setCap(r.getCap() + f.getFlow());
+                            r.setHighlighted(true);
+                            break;
+                        }
+                    }
                     return f;
                 }
             }
@@ -129,35 +110,24 @@ public class FordFulkerson
         return null;
     }
 
-    private void addUnmodifiedEdges(FlowStep f)
-    {
-        for (DirectedEdge e : edgeList)
-        {
-            if (visited.contains(e.getU()) || visited.contains(e.getV()))
-                continue;
-            e.setHighlighted(false);
-            f.addUnmodifiedEdge(e);
-        }
-    }
-
     public void run() // runs ford fulkerson on given graph
     {
         // initially the graph is as the input and all edges are not highlighted
         residualGraph = edgeList;
         steps = new ArrayList<>();
-        steps.add(new FlowStep(new ArrayList<>(), edgeList, 0));
+        steps.add(new FlowStep(edgeList, 0));
         flow = 0;
         while (true)
         {
             visited.clear();
+            for (DirectedEdge e : edgeList)
+                e.setHighlighted(false);
             FlowStep f = getFlowStep(src, (int)2e9);
             if (f == null) // Max flow reached
                 break;
-
-            addUnmodifiedEdges(f);
+            f.setEdgeList(edgeList);
             steps.add(f);
             flow += f.getFlow();
-            residualGraph = f.getResidualGraph();
         }
     }
 }

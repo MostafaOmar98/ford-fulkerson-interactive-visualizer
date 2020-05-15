@@ -84,4 +84,11 @@ public class DirectedEdge
     {
         return Objects.hash(getU(), getV(), getCap());
     }
+
+    public boolean isReverse(DirectedEdge r)
+    {
+        if (this.getU().equals(r.getV()) && this.getV().equals(r.getU()))
+            return true;
+        return false;
+    }
 }
