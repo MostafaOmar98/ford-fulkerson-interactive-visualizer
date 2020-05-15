@@ -1,5 +1,8 @@
 package GUI;
 
+import Graph.DirectedEdge;
+import Graph.Vertex;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -109,6 +112,17 @@ public class Input extends JPanel
         JPanel generatePanel = new JPanel(new BorderLayout());
         JButton generate = new JButton("Generate!");
         generatePanel.add(generate);
+
+        // Action listeners
+        generate.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                generateGraph();
+            }
+        });
+
         return generatePanel;
     }
 
@@ -128,4 +142,73 @@ public class Input extends JPanel
         add(edgesInputPanel);
         add(generatePanel);
     }
+
+    private void generateGraph()
+    {
+        ArrayList<DirectedEdge> edgesArr = new ArrayList<>();
+        Integer nV = (Integer) nVertices.getSelectedItem();
+        int error = 0;
+        // Loop over inputs
+        for (int i = 0; i < edgeListTF.size(); i += 3)
+        {
+            JTextField u = edgeListTF.get(i);
+            JTextField v = edgeListTF.get(i + 1);
+            JTextField cap = edgeListTF.get(i + 2);
+            try
+            {
+                Integer uid = Integer.valueOf(u.getText());
+                Integer vid = Integer.valueOf(v.getText());
+                Integer capValue = Integer.valueOf(cap.getText());
+                DirectedEdge e = new DirectedEdge(new Vertex(uid), new Vertex(vid), capValue);
+                // Check that there is no out of bounds vertices
+                if (uid >= nV || vid >= nV || uid < 0 || vid < 0)
+                {
+                    error = 1;
+                    break;
+                }
+                // positive capacites
+                if (capValue < 0)
+                {
+                    error = 3;
+                    break;
+                }
+                edgesArr.add(e);
+            } catch (NumberFormatException e)
+            {
+                error = 2;
+                break;
+            }
+        }
+        Integer srcId = null;
+        Integer snkId = null;
+        try
+        {
+            srcId = Integer.valueOf(srcTF.getText());
+            snkId = Integer.valueOf(snkTF.getText());
+            if (srcId.equals(snkId))
+                error = 4;
+            if (srcId >= nV || snkId >= nV || srcId < 0 || snkId < 0)
+                error = 1;
+        } catch(NumberFormatException e)
+        {
+            error = 2;
+        }
+
+        if (error == 0)
+        {
+            MaxFlowVisualizer visualizer = new MaxFlowVisualizer(nV, edgesArr, new Vertex(srcId), new Vertex(snkId));
+            visualizer.run();
+        }
+        else if (error == 1)
+            JOptionPane.showMessageDialog(null, "Node Numbers must be between [0, n - 1] inclusive");
+        else if (error == 2)
+            JOptionPane.showMessageDialog(null, "Please enter all fields in numeric format (All entires must be integer numbers)");
+        else if (error == 3)
+            JOptionPane.showMessageDialog(null, "Please enter positive capacities values");
+        else if (error == 4)
+            JOptionPane.showMessageDialog(null, "Please enter different source and destination");
+
+
+    }
+
 }
