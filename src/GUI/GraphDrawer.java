@@ -24,6 +24,7 @@ public class GraphDrawer
 {
     private AbstractGraph G;
     private JFrame frame;
+    private JPanel mainPanel;
     private JLabel flowValue, flowLabel;
     ArrayList<FlowStep> flowSteps; // contains all iterations of ford fulkerson algorithm on given graph
     Integer clickCount = 1; // used for calculating which step we are at
@@ -66,7 +67,7 @@ public class GraphDrawer
         infoPanel.add(step);
         infoPanel.add(flowLabel);
         infoPanel.add(flowValue);
-        frame.add(infoPanel);
+        mainPanel.add(infoPanel);
 
         // Interactivity
 
@@ -107,13 +108,15 @@ public class GraphDrawer
 
         // put graph in a frame
         frame = new JFrame("Original Graph");
+        mainPanel = new JPanel(new GridLayout());
         JPanel panel = new JPanel();
         panel.add(vs);
-        frame.add(panel);
+        mainPanel.add(panel);
+        frame.add(mainPanel);
         frame.setExtendedState( frame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 
-        frame.pack();
         setInteractiveSolver();
+        frame.pack();
         frame.setVisible(true);
     }
 
