@@ -72,10 +72,7 @@ public class FordFulkerson
         if (runningFlow.equals(0))
             return null;
         if (u.equals(snk)) // reached snk with a positive flow
-        {
-            FlowStep f = new FlowStep(runningFlow);
-            return f;
-        }
+            return new FlowStep(runningFlow);
 
         visited.add(u);
         for (DirectedEdge e : edgeList)
@@ -93,7 +90,7 @@ public class FordFulkerson
                         if (e.isReverse(r))
                         {
                             r.setCap(r.getCap() + f.getFlow());
-                            r.setHighlighted(true);
+//                            r.setHighlighted(true);
                             break;
                         }
                     }
