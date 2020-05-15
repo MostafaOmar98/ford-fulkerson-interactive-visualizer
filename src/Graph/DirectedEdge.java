@@ -1,11 +1,13 @@
 package Graph;
 
-public class Edge
+import java.util.Objects;
+
+public class DirectedEdge
 {
     private Vertex u, v;
     private Integer cap;
 
-    public Edge(Vertex u, Vertex v, Integer cap)
+    public DirectedEdge(Vertex u, Vertex v, Integer cap)
     {
         this.u = u;
         this.v = v;
@@ -46,5 +48,22 @@ public class Edge
     public String toString()
     {
         return cap.toString();
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        DirectedEdge edge = (DirectedEdge) o;
+        return Objects.equals(getU(), edge.getU()) && Objects.equals(getV(), edge.getV()) && Objects.equals(getCap(), edge.getCap());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getU(), getV(), getCap());
     }
 }
