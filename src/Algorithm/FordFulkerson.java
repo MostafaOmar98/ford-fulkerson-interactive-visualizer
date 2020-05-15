@@ -16,11 +16,15 @@ public class FordFulkerson
 
     public FordFulkerson(ArrayList<DirectedEdge> edgeList, Vertex src, Vertex snk)
     {
-        this.edgeList = edgeList;
+        this.edgeList = new ArrayList<DirectedEdge>();
+        for (DirectedEdge e : edgeList) // deep copy
+            this.edgeList.add(new DirectedEdge(new Vertex(e.getU().getIndex()), new Vertex(e.getV().getIndex()), e.getCap()));
         residualGraph = null;
         steps = null;
         this.src = src;
         this.snk = snk;
+        visited = new HashSet<Vertex>();
+        flow = 0;
     }
 
     public ArrayList<DirectedEdge> getEdgeList()
@@ -74,28 +78,24 @@ public class FordFulkerson
         boolean addedReverseEdge = false; // checker for not adding reversed edge twice
         for (DirectedEdge e : edgeList)
         {
-            if (u.equals(e.getU()))
+            if (u.equals(e.getU()) && modifiedEdge != null)
             {
                 if (e.equals(modifiedEdge)) // update capacity on flow edge
                 {
-                    DirectedEdge UV = new DirectedEdge(e.getU(), e.getV(), e.getCap() - f.getFlow());
+                    DirectedEdge UV = new DirectedEdge(e.getU(), e.getV(), e.getCap() - f.getFlow(), true);
                     f.addModifiedEdge(UV);
                 }
-                else if (e.getU() == modifiedEdge.getV() && e.getV() == modifiedEdge.getU())// update capacity on reverse edge
+                else if (e.getU().equals(modifiedEdge.getV()) && e.getV().equals(modifiedEdge.getU()))// update capacity on reverse edge
                 {
                     addedReverseEdge = true;
-                    DirectedEdge VU = new DirectedEdge(e.getU(), e.getV(), e.getCap() + f.getFlow());
-                    f.addUnmodifiedEdge(VU); // unmodified stands for wont show up on the GUI as highlighted
-                }
-                else if (e.getCap() > 0) // unmodified edge. Not sure if should add it if it has zero flow or not. See how it looks in GUI. Edge can have positive flow then go to zero then next iteration might want to remove it
-                {
-                    f.addUnmodifiedEdge(e);
+                    DirectedEdge VU = new DirectedEdge(e.getU(), e.getV(), e.getCap() + f.getFlow(), true);
+                    f.addModifiedEdge(VU);
                 }
             }
         }
         if (!addedReverseEdge && modifiedEdge != null) // if the reverse edge wasn't initially in the list
         {
-            DirectedEdge VU = new DirectedEdge(modifiedEdge.getV(), modifiedEdge.getU(), f.getFlow());
+            DirectedEdge VU = new DirectedEdge(modifiedEdge.getV(), modifiedEdge.getU(), f.getFlow(), true);
             f.addUnmodifiedEdge(VU);
         }
     }
@@ -121,11 +121,23 @@ public class FordFulkerson
                 if (f != null) // found a path with a positive flow
                 {
                     updateFlowStep(u, f, e);
+                    e.setCap(e.getCap() - f.getFlow());
                     return f;
                 }
             }
         }
         return null;
+    }
+
+    private void addUnmodifiedEdges(FlowStep f)
+    {
+        for (DirectedEdge e : edgeList)
+        {
+            if (visited.contains(e.getU()) || visited.contains(e.getV()))
+                continue;
+            e.setHighlighted(false);
+            f.addUnmodifiedEdge(e);
+        }
     }
 
     public void run() // runs ford fulkerson on given graph
@@ -134,15 +146,15 @@ public class FordFulkerson
         residualGraph = edgeList;
         steps = new ArrayList<>();
         steps.add(new FlowStep(new ArrayList<>(), edgeList, 0));
-
+        flow = 0;
         while (true)
         {
             visited.clear();
-
             FlowStep f = getFlowStep(src, (int)2e9);
             if (f == null) // Max flow reached
                 break;
 
+            addUnmodifiedEdges(f);
             steps.add(f);
             flow += f.getFlow();
             residualGraph = f.getResidualGraph();

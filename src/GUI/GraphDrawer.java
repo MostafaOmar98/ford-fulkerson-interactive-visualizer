@@ -1,5 +1,6 @@
 package GUI;
 
+import Algorithm.FordFulkerson;
 import Graph.*;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -13,13 +14,20 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GraphDrawer
 {
-    AbstractGraph G;
-    JFrame frame;
+    private AbstractGraph G;
+    private JFrame frame;
+    private JLabel flowValue;
+    ArrayList<FlowStep> flowSteps;
+    Integer clickCount = 1;
     public GraphDrawer(int nV, ArrayList<DirectedEdge> edgeList, Vertex src, Vertex snk)
     {
         G = new SparseMultigraph<Vertex, DirectedEdge>();
@@ -35,6 +43,10 @@ public class GraphDrawer
 
         for (DirectedEdge e : edgeList)
             addEdge(e);
+
+        FordFulkerson ff = new FordFulkerson(edgeList, src, snk);
+        ff.run();
+        flowSteps = ff.getSteps();
     }
 
     void addEdge(DirectedEdge e)
@@ -43,6 +55,51 @@ public class GraphDrawer
         G.addEdge(e, e.getU(), e.getV(), EdgeType.DIRECTED);
     }
 
+
+    private void setInteractiveSolver()
+    {
+        JButton step = new JButton("Do One Step");
+        JPanel infoPanel = new JPanel();
+
+        JLabel flowLabel = new JLabel("Flow So Far: ");
+        flowValue = new JLabel("0");
+//        flowLabel.setSize(40, 40);
+//        flowValue.setSize(40, 40);
+        infoPanel.add(step);
+        infoPanel.add(flowLabel);
+        infoPanel.add(flowValue);
+        frame.add(infoPanel);
+
+        // Interactivity
+
+
+        step.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (clickCount >= flowSteps.size())
+                    return;
+                FlowStep f = flowSteps.get(clickCount++);
+                Integer newFlowValue = Integer.valueOf(flowValue.getText()) + f.getFlow();
+                flowValue.setText(newFlowValue.toString());
+
+                Collection<DirectedEdge> oldEdges = G.getEdges();
+                ArrayList<DirectedEdge> oldEdgesList = new ArrayList<>(oldEdges);
+                for (int i = 0; i < oldEdgesList.size(); ++i)
+                    G.removeEdge(oldEdgesList.get(i));
+
+                for (DirectedEdge highlightedEdge : f.getHighlighted())
+                    G.addEdge(highlightedEdge, highlightedEdge.getU(), highlightedEdge.getV(), EdgeType.DIRECTED);
+
+                for (DirectedEdge unhighlightedEdge : f.getUnhighlighted())
+                    G.addEdge(unhighlightedEdge, unhighlightedEdge.getU(), unhighlightedEdge.getV(), EdgeType.DIRECTED);
+
+                frame.repaint();
+            }
+        });
+
+    }
 
     public void draw()
     {
@@ -54,10 +111,13 @@ public class GraphDrawer
 
         // put graph in a frame
         frame = new JFrame("Original Graph");
-        frame.add(vs);
-        frame.pack();
+        JPanel panel = new JPanel();
+        panel.add(vs);
+        frame.add(panel);
         frame.setExtendedState( frame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 
+        frame.pack();
+        setInteractiveSolver();
         frame.setVisible(true);
     }
 
@@ -106,7 +166,20 @@ public class GraphDrawer
                 return new Font(edge.toString(), 0, 20);
             }
         };
+
+        Transformer<DirectedEdge, Paint> edgePaintTransformer = new Transformer<DirectedEdge, Paint>()
+        {
+            @Override
+            public Paint transform(DirectedEdge directedEdge)
+            {
+                if (directedEdge.isHighlighted())
+                    return Color.GREEN;
+                return Color.BLACK;
+            }
+        };
+
         vs.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<>());
         vs.getRenderContext().setEdgeFontTransformer(edgeFontTransformer);
+        vs.getRenderContext().setEdgeDrawPaintTransformer(edgePaintTransformer);
     }
 }

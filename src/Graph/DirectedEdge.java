@@ -6,12 +6,20 @@ public class DirectedEdge
 {
     private Vertex u, v;
     private Integer cap;
-
+    private Boolean isHighlighted = false;
     public DirectedEdge(Vertex u, Vertex v, Integer cap)
     {
         this.u = u;
         this.v = v;
         this.cap = cap;
+    }
+
+    public DirectedEdge(Vertex u, Vertex v, Integer cap, Boolean isHighlighted)
+    {
+        this.u = u;
+        this.v = v;
+        this.cap = cap;
+        this.isHighlighted = isHighlighted;
     }
 
     public Vertex getU()
@@ -59,6 +67,16 @@ public class DirectedEdge
             return false;
         DirectedEdge edge = (DirectedEdge) o;
         return Objects.equals(getU(), edge.getU()) && Objects.equals(getV(), edge.getV()) && Objects.equals(getCap(), edge.getCap());
+    }
+
+    public Boolean isHighlighted()
+    {
+        return isHighlighted;
+    }
+
+    public void setHighlighted(Boolean highlighted)
+    {
+        isHighlighted = highlighted;
     }
 
     @Override
