@@ -20,6 +20,7 @@ public class MaxFlowVisualizer
 
     public void run()
     {
-
+        OriginalGraphDrawer originalGraphDrawer = new OriginalGraphDrawer(nV, edgeList);
+        originalGraphDrawer.draw();
     }
 }
