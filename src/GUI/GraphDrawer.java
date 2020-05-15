@@ -2,8 +2,7 @@ package GUI;
 
 import Algorithm.FordFulkerson;
 import Graph.*;
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.*;
 import edu.uci.ics.jung.graph.AbstractGraph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -100,7 +99,7 @@ public class GraphDrawer
     public void draw()
     {
         // graph layout on screen
-        Layout<Vertex, DirectedEdge> layout = new CircleLayout(G);
+        Layout<Vertex, DirectedEdge> layout = new FRLayout<>(G);
         // responsible for drawing the graph on screen
         BasicVisualizationServer<Vertex, DirectedEdge> vs = new BasicVisualizationServer<Vertex, DirectedEdge>(layout);
         setDrawingStyle(vs);
