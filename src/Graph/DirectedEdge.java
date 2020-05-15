@@ -6,7 +6,7 @@ public class DirectedEdge
 {
     private Vertex u, v;
     private Integer cap;
-    private Boolean isHighlighted = false;
+    private boolean isHighlighted = false;
     public DirectedEdge(Vertex u, Vertex v, Integer cap)
     {
         this.u = u;
