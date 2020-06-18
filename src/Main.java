@@ -34,12 +34,17 @@ public class Main
                         "Dr. Moustafa Reda El-Tantawy\n");
                 introText.setFont(new Font("Arial", Font.PLAIN, 20));
                 introText.setEditable(false);
+
                 JButton startProgram = new JButton("Start Program");
+                startProgram.setFont(new Font("Arial", Font.BOLD, 50));
+                JPanel buttonPanel = new JPanel(new BorderLayout());
+                buttonPanel.add(startProgram);
+
                 introFrame.add(introPanel);
                 introPanel.add(introText);
-                introPanel.add(startProgram);
+                introPanel.add(buttonPanel);
                 introFrame.pack();
-                introFrame.setSize(800, 800);
+                introFrame.setExtendedState( introFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
                 introFrame.setVisible(true);
                 introFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 startProgram.addActionListener(new ActionListener()
