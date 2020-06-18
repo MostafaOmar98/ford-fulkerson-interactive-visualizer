@@ -1,0 +1,31 @@
+// Assume source node is src and destination node is dest
+// Please note that this is only Ford Fulkerson's Pseudocode
+// For GUI Code please check the attached source code
+
+
+int getMaximumFlow()
+{
+	int totalFlow = 0
+	while(true)
+	{
+		int iterationFlow = getIterationFlow(src, INFINITY)
+		if (iterationFlow == 0)
+			break;
+		totalFlow += iterationFlow
+	}
+	return totalFlow;
+}
+
+int getIterationFlow(Vertex U, int runningFlow)
+{
+	if (U == destination)
+		return runningFlow
+	
+	for (Vertex V in adjacencyList[U]):
+	{
+		int flow = getIterationFlow(V, minimum(runningFlow, currentEdgeCapacity)
+		if (flow > 0)
+			return flow
+	}
+	return 0;
+}
