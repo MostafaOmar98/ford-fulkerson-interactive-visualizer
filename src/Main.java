@@ -1,9 +1,13 @@
 import GUI.Input;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import GUI.*;
 public class Main
@@ -16,35 +20,28 @@ public class Main
             {
                 JFrame introFrame = new JFrame("Cover Page");
                 JPanel introPanel = new JPanel();
-                introPanel.setLayout(new BoxLayout(introPanel, BoxLayout.PAGE_AXIS));
-                JTextArea introText = new JTextArea("Faculty of Computers and Artificial Intelligence,\n" +
-                        "Cairo University\n\n\n" +
-                        "CS316\n\n\n" +
-                        "Algorithms: Analysis and Design\n" +
-                        "2nd Semester 2020 Research\n" +
-                        "1st Topic: Maximum Flow and Dijkstra\n" +
-                        "PID23868166\n\n\n" +
-                        "Created By:\n" +
-                        "1- Mostafa Omar Mahmoud - 20170292\n" +
-                        "2- Abdelrahman Ibrahim Ibrahim - 20170139\n" +
-                        "3- Ahmad Khaled Fawzy - 20170377\n" +
-                        "4- Ahmed Mohamed Hanafy - 20170357\n" +
-                        "5- Ahmed Wessam Fathy - 20170372\n\n\n" +
-                        "Under the supervision of: \n" +
-                        "Dr. Moustafa Reda El-Tantawy\n");
-                introText.setFont(new Font("Arial", Font.PLAIN, 20));
-                introText.setEditable(false);
+                introPanel.setLayout(new BorderLayout());
 
                 JButton startProgram = new JButton("Start Program");
                 startProgram.setFont(new Font("Arial", Font.BOLD, 50));
-                JPanel buttonPanel = new JPanel(new BorderLayout());
+                JPanel buttonPanel = new JPanel();
                 buttonPanel.add(startProgram);
 
+                BufferedImage myPicture = null;
+                try
+                {
+                    myPicture = ImageIO.read(this.getClass().getResource("/CoverImage.png"));
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+                introPanel.add(picLabel, BorderLayout.CENTER);
+
+                introPanel.add(startProgram, BorderLayout.SOUTH);
                 introFrame.add(introPanel);
-                introPanel.add(introText);
-                introPanel.add(buttonPanel);
                 introFrame.pack();
-                introFrame.setExtendedState( introFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+
                 introFrame.setVisible(true);
                 introFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 startProgram.addActionListener(new ActionListener()
