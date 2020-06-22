@@ -40,8 +40,8 @@ public class Main
 
                 introPanel.add(buttonPanel, BorderLayout.SOUTH);
                 introFrame.add(introPanel);
-                introFrame.setExtendedState( introFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
                 introFrame.pack();
+                introFrame.setExtendedState( introFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
                 introFrame.setVisible(true);
                 introFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 startProgram.addActionListener(new ActionListener()
