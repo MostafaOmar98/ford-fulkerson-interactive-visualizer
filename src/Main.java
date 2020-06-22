@@ -38,10 +38,10 @@ public class Main
                 JLabel picLabel = new JLabel(new ImageIcon(myPicture));
                 introPanel.add(picLabel, BorderLayout.CENTER);
 
-                introPanel.add(startProgram, BorderLayout.SOUTH);
+                introPanel.add(buttonPanel, BorderLayout.SOUTH);
                 introFrame.add(introPanel);
+//                introFrame.setExtendedState( introFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
                 introFrame.pack();
-
                 introFrame.setVisible(true);
                 introFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 startProgram.addActionListener(new ActionListener()

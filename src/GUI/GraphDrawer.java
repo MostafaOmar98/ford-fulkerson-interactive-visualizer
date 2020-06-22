@@ -107,7 +107,7 @@ public class GraphDrawer
         setDrawingStyle(vs);
 
         // put graph in a frame
-        frame = new JFrame("Original Graph");
+        frame = new JFrame("Max Flow Graph");
         mainPanel = new JPanel(new GridLayout());
         JPanel panel = new JPanel();
         panel.add(vs);
