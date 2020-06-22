@@ -157,7 +157,9 @@ public class Input extends JPanel
             try
             {
                 Integer uid = Integer.valueOf(u.getText());
+                uid--;
                 Integer vid = Integer.valueOf(v.getText());
+                vid--;
                 Integer capValue = Integer.valueOf(cap.getText());
                 DirectedEdge e = new DirectedEdge(new Vertex(uid), new Vertex(vid), capValue);
                 // Check that there is no out of bounds vertices
@@ -184,7 +186,9 @@ public class Input extends JPanel
         try
         {
             srcId = Integer.valueOf(srcTF.getText());
+            srcId--;
             snkId = Integer.valueOf(snkTF.getText());
+            snkId--;
             if (srcId.equals(snkId))
                 error = 4;
             if (srcId >= nV || snkId >= nV || srcId < 0 || snkId < 0)
@@ -216,7 +220,7 @@ public class Input extends JPanel
             visualizer.run();
         }
         else if (error == 1)
-            JOptionPane.showMessageDialog(null, "Node Numbers must be between [0, n - 1] inclusive");
+            JOptionPane.showMessageDialog(null, "Node Numbers must be between [1, n] inclusive");
         else if (error == 2)
             JOptionPane.showMessageDialog(null, "Please enter all fields in numeric format (All entires must be integer numbers)");
         else if (error == 3)

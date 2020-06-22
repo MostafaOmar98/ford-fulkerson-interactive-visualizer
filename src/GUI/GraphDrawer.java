@@ -123,7 +123,15 @@ public class GraphDrawer
     private void setDrawingStyle(BasicVisualizationServer<Vertex, DirectedEdge> vs)
     {
         // vertices
-        vs.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+        vs.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>()
+        {
+            @Override
+            public String transform(Vertex vertex)
+            {
+                Integer indx = vertex.getIndex() + 1;
+                return indx.toString();
+            }
+        });
         Transformer<Vertex, Font> vertexFontTransformer = new Transformer<Vertex, Font>()
         {
             @Override
